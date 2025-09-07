@@ -336,7 +336,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, requestFullScreen, o
                          <form onSubmit={handleCreateProfile} className="space-y-3">
                             <div>
                                 <label htmlFor="username-create" className="block text-sm font-medium text-slate-300 mb-1">{t('username_label')}</label>
-                                <input type="text" id="username-create" value={username} onChange={(e) => setUsername(e.target.value)} placeholder={t('username_placeholder')} className="w-full px-4 py-2 bg-slate-900/80 border-2 border-slate-600 rounded-lg text-white focus:border-indigo-500 outline-none" maxLength={20} />
+                                <input type="text" id="username-create" value={username} onChange={(e) => setUsername(e.target.value)} placeholder={t('username_placeholder')} className="w-full px-4 py-2 bg-slate-900/80 border-2 border-slate-600 rounded-lg text-white focus:border-indigo-500 outline-none" maxLength={20} autoComplete="off" autoCorrect="off" />
                             </div>
                             <div>
                                 <label htmlFor="country" className="block text-sm font-medium text-slate-300 mb-1">{t('country_label')}</label>
@@ -373,11 +373,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, requestFullScreen, o
                          <form onSubmit={handleLoginWithPin} className="space-y-4">
                              <div>
                                 <label htmlFor="username-login" className="block text-sm font-medium text-slate-300 mb-1">{t('username_label')}</label>
-                                <input type="text" id="username-login" value={username} onChange={(e) => setUsername(e.target.value)} placeholder={t('username_placeholder')} className="w-full px-4 py-2 bg-slate-900/80 border-2 border-slate-600 rounded-lg text-white focus:border-indigo-500 outline-none" maxLength={20} />
+                                <input type="text" id="username-login" value={username} onChange={(e) => setUsername(e.target.value)} placeholder={t('username_placeholder')} className="w-full px-4 py-2 bg-slate-900/80 border-2 border-slate-600 rounded-lg text-white focus:border-indigo-500 outline-none" maxLength={20} autoComplete="off" autoCorrect="off" />
                             </div>
                              <div>
                                 <label htmlFor="pin" className="block text-sm font-medium text-slate-300 mb-1">{t('pin_code_label')}</label>
-                                <input type="password" id="pin" inputMode="numeric" pattern="[0-9]*" value={pin} onChange={(e) => setPin(e.target.value)} className="w-full px-4 py-2 bg-slate-900/80 border-2 border-slate-600 rounded-lg text-white focus:border-indigo-500 outline-none" maxLength={4} />
+                                <input type="text" id="pin" inputMode="numeric" pattern="[0-9]*" value={pin} onChange={(e) => setPin(e.target.value)} className="w-full px-4 py-2 bg-slate-900/80 border-2 border-slate-600 rounded-lg text-white focus:border-indigo-500 outline-none" maxLength={4} autoComplete="one-time-code" style={{ WebkitTextSecurity: 'disc', textSecurity: 'disc' } as React.CSSProperties} />
                             </div>
                             {error && <p className="text-red-400 text-sm text-center">{error}</p>}
                              <div className="pt-2">
