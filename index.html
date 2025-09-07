@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>FANIDA</title>
+
+    <!-- External Libs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        important: '#fanida-quiz-container',
+      }
+    </script>
+    
+    <!-- Scoped Custom CSS & Animations -->
+    <style>
+      #fanida-quiz-container {
+        font-family: 'Poppins', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        height: 100%;
+        overflow-y: auto; /* Allow vertical scrolling */
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+      #fanida-quiz-container::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, and Opera */
+      }
+
+      #fanida-quiz-container .font-serif {
+        font-family: 'Merriweather', serif;
+      }
+
+      /* Keyframes are global */
+      @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+      @keyframes letter-reveal { 0% { opacity: 0; transform: translateY(30px) scale(0.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+      @keyframes fade-in-down { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes zoom-in { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+      @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
+      @keyframes trophy-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+      @keyframes trophy-glow { 0%, 100% { filter: drop-shadow(0 0 12px #fde047); } 50% { filter: drop-shadow(0 0 20px #fef3c7); } }
+      @keyframes trophy-sparkle { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.2); } }
+      @keyframes subtle-rotate { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+      
+      @keyframes button-correct-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+      }
+      @keyframes button-correct-halo {
+        from { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+        to { box-shadow: 0 0 0 15px rgba(74, 222, 128, 0); }
+      }
+      @keyframes button-incorrect-shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-5px); }
+        40%, 80% { transform: translateX(5px); }
+      }
+      @keyframes button-incorrect-flash {
+        0%, 100% { background-color: initial; border-color: initial; }
+        50% { background-color: rgba(239, 68, 68, 0.8); border-color: rgba(248, 113, 113, 1); }
+      }
+      @keyframes background-shapes {
+        0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+        100% { transform: translateY(-100vh) rotate(360deg); opacity: 0.3; }
+      }
+      
+      @keyframes cloud-pass {
+        0% {
+          transform: translateX(100vw) scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateX(-100vw) scale(1.2);
+          opacity: 0;
+        }
+      }
+
+      @keyframes slow-pulse {
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      @keyframes halo-glow {
+        0%, 100% { box-shadow: 0 0 10px #8b5cf6, 0 0 20px #8b5cf6, 0 0 30px #a78bfa, 0 0 40px #a78bfa; }
+        50% { box-shadow: 0 0 20px #a78bfa, 0 0 30px #a78bfa, 0 0 40px #c4b5fd, 0 0 50px #c4b5fd; }
+      }
+
+      /* START of NEW keyframes for unified trophy reveal */
+      @keyframes trophy-reveal {
+        from {
+          opacity: 0;
+          transform: scale(0.7);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      /* END of NEW keyframes */
+
+      /* START OF NEW/RE-ADDED KEYFRAMES for trophy modal effects */
+      @keyframes modal-trophy-glow {
+        0%, 100% {
+          filter: drop-shadow(0 0 15px rgba(253, 224, 71, 0.7));
+        }
+        50% {
+          filter: drop-shadow(0 0 25px rgba(253, 224, 71, 1));
+        }
+      }
+      /* END OF NEW/RE-ADDED KEYFRAMES */
+      
+      /* START of NEW styles for CAFTAN modal effects */
+      @keyframes slow-trophy-reveal {
+        0% {
+          opacity: 0;
+          transform: scale(0.6);
+          filter: drop-shadow(0 0 5px rgba(196, 181, 253, 0));
+        }
+        70% {
+          opacity: 1;
+          transform: scale(1.05);
+          filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.8));
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+          filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.6));
+        }
+      }
+
+      /* Wrapper for sparkles. Needs an empty <i> tag inside for the 3rd and 4th sparkles */
+      #fanida-quiz-container .majestic-caftan-sparkles {
+        position: relative;
+      }
+      #fanida-quiz-container .majestic-caftan-sparkles::before,
+      #fanida-quiz-container .majestic-caftan-sparkles::after,
+      #fanida-quiz-container .majestic-caftan-sparkles i::before,
+      #fanida-quiz-container .majestic-caftan-sparkles i::after {
+        content: '✨';
+        position: absolute;
+        font-size: 2.5rem;
+        opacity: 0;
+        animation: trophy-sparkle 2s ease-in-out infinite;
+        text-shadow: 0 0 8px #fff, 0 0 15px #c4b5fd, 0 0 25px #8b5cf6;
+        z-index: 15;
+      }
+      #fanida-quiz-container .majestic-caftan-sparkles::before { top: 15%; left: 10%; animation-delay: 0s; }
+      #fanida-quiz-container .majestic-caftan-sparkles::after { bottom: 20%; right: 10%; animation-delay: 1s; }
+      #fanida-quiz-container .majestic-caftan-sparkles i { display: block; position: absolute; inset: 0; }
+      #fanida-quiz-container .majestic-caftan-sparkles i::before { top: 50%; left: 0%; animation-delay: 0.5s; }
+      #fanida-quiz-container .majestic-caftan-sparkles i::after { top: 0%; right: 25%; animation-delay: 1.5s; }
+      /* END of NEW styles for CAFTAN */
+
+      /* START of NEW styles for JOKER title */
+      @keyframes joker-glow {
+        0%, 100% {
+          transform: scale(1);
+          text-shadow: 0 0 4px #fde047, 0 0 8px #fde047;
+        }
+        50% {
+          transform: scale(1.03);
+          text-shadow: 0 0 8px #fef3c7, 0 0 16px #fef3c7;
+        }
+      }
+      /* END of NEW styles for JOKER title */
+
+      /* Scoped animation classes */
+      #fanida-quiz-container .animate-fade-in { animation: fade-in 0.5s ease-in-out; }
+      #fanida-quiz-container .animate-fade-out { animation: fade-out 0.5s ease-in-out forwards; }
+      #fanida-quiz-container .animate-letter-reveal { animation: letter-reveal 0.6s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards; }
+      #fanida-quiz-container .animate-fade-in-down { animation: fade-in-down 0.8s ease-out forwards; }
+      #fanida-quiz-container .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
+      #fanida-quiz-container .animate-zoom-in { animation: zoom-in 0.3s ease-out; }
+      #fanida-quiz-container .animate-blob { animation: blob 7s infinite; }
+      #fanida-quiz-container .animate-trophy-pulse { animation: trophy-pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+      #fanida-quiz-container .animate-trophy-glow { animation: trophy-glow 2s ease-in-out infinite; }
+      #fanida-quiz-container .animate-slow-pulse { animation: slow-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+      #fanida-quiz-container .animate-halo-glow { animation: halo-glow 3s ease-in-out infinite; }
+      #fanida-quiz-container .animate-joker-glow { animation: joker-glow 2.5s ease-in-out infinite; }
+      
+      /* START of NEW animation class for unified trophy reveal */
+      #fanida-quiz-container .animate-trophy-reveal {
+        animation: trophy-reveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      }
+      /* END of NEW animation class */
+      
+      /* START of NEW animation class for CAFTAN reveal */
+      #fanida-quiz-container .animate-slow-trophy-reveal {
+        animation: slow-trophy-reveal 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      }
+      /* END of NEW animation class */
+
+      /* START of NEW keyframes for trophy title pulse */
+      @keyframes trophy-title-pulse {
+        0%, 100% {
+          opacity: 0.7;
+          transform: scale(0.98);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.02);
+        }
+      }
+      /* END of NEW keyframes */
+
+      /* START of NEW animation class for trophy title pulse */
+      #fanida-quiz-container .animate-trophy-title-pulse {
+        animation: trophy-title-pulse 3s ease-in-out infinite;
+      }
+      /* END of NEW animation class */
+
+
+      /* START OF NEW aninmation class for trophy modal glow */
+      #fanida-quiz-container .animate-modal-trophy-glow {
+        animation: modal-trophy-glow 3s ease-in-out infinite;
+      }
+      /* END OF NEW aninmation class */
+      
+      #fanida-quiz-container .correct-answer-animation {
+        animation: button-correct-pulse 0.5s ease-in-out, button-correct-halo 0.8s ease-in-out;
+      }
+      #fanida-quiz-container .incorrect-answer-animation {
+        animation: button-incorrect-shake 0.4s ease-in-out, button-incorrect-flash 0.8s ease-in-out;
+      }
+
+      /* Crisp image rendering for trophies */
+      #fanida-quiz-container .crisp-image {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+      }
+
+      /* Trophy animation wrapper and sparkles */
+      #fanida-quiz-container .trophy-animation-wrapper {
+        position: relative; display: inline-block;
+      }
+      #fanida-quiz-container .trophy-animation-wrapper::before,
+      #fanida-quiz-container .trophy-animation-wrapper::after {
+        content: '✨'; position: absolute; font-size: 1.5rem; opacity: 0;
+        animation: trophy-sparkle 2s ease-in-out infinite;
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fde047;
+      }
+      #fanida-quiz-container .trophy-animation-wrapper::before { top: 10%; left: 10%; animation-delay: 0s; }
+      #fanida-quiz-container .trophy-animation-wrapper::after { bottom: 20%; right: 5%; animation-delay: 1s; }
+      
+      /* Sparkles for the main title */
+      #fanida-quiz-container .title-sparkles::before,
+      #fanida-quiz-container .title-sparkles::after {
+        font-size: 3rem;
+        text-shadow: 0 0 8px #fff, 0 0 15px #fff, 0 0 25px #fde047;
+      }
+      #fanida-quiz-container .title-sparkles::before { top: 0%; left: -5%; }
+      #fanida-quiz-container .title-sparkles::after { bottom: 10%; right: -5%; animation-delay: 1s; }
+
+      /* Bottom trophy animation */
+      #fanida-quiz-container .bottom-trophy-wrapper { position: relative; display: inline-block; }
+      #fanida-quiz-container .bottom-trophy-wrapper .trophy-icon { animation: subtle-rotate 5s ease-in-out infinite; }
+      #fanida-quiz-container .bottom-trophy-wrapper::before,
+      #fanida-quiz-container .bottom-trophy-wrapper::after {
+        content: '✨'; position: absolute; font-size: 1.2rem; opacity: 0;
+        animation: trophy-sparkle 2.5s ease-in-out infinite;
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fde047;
+      }
+      #fanida-quiz-container .bottom-trophy-wrapper::before { top: 0; left: 0; animation-delay: 0s; }
+      #fanida-quiz-container .bottom-trophy-wrapper::after { bottom: 10%; right: -5%; animation-delay: 1.25s; }
+
+      html, body, #root {
+        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Lock the main page scroll */
+      }
+
+      body { 
+        background-color: #0f172a;
+        overscroll-behavior: none;
+      }
+
+      /* Background shapes */
+      .background-shapes {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .background-shapes span {
+        position: absolute;
+        bottom: -100px;
+        display: block;
+        width: 20px;
+        height: 20px;
+        background-color: rgba(129, 140, 248, 0.1);
+        animation: background-shapes 20s linear infinite;
+        border-radius: 4px;
+      }
+      .background-shapes span:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; animation-duration: 35s; }
+      .background-shapes span:nth-child(2) { left: 20%; width: 30px; height: 30px; animation-delay: 2s; animation-duration: 17s; }
+      .background-shapes span:nth-child(3) { left: 35%; width: 50px; height: 50px; animation-delay: 4s; animation-duration: 22s; }
+      .background-shapes span:nth-child(4) { left: 50%; width: 20px; height: 20px; animation-delay: 0s; animation-duration: 18s; }
+      .background-shapes span:nth-child(5) { left: 65%; width: 25px; height: 25px; animation-delay: 1s; animation-duration: 15s; }
+      .background-shapes span:nth-child(6) { left: 80%; width: 110px; height: 110px; animation-delay: 3s; animation-duration: 40s; }
+      
+      .cloud-transition-effect .cloud {
+        position: absolute;
+        background: radial-gradient(circle, rgba(148, 163, 184, 0.15) 0%, rgba(148, 163, 184, 0) 70%);
+        border-radius: 50%;
+        filter: blur(20px);
+        animation: cloud-pass 1.5s ease-in-out forwards;
+        will-change: transform, opacity;
+      }
+
+      /* START of NEW styles for trophy modal sparkles and name glow */
+      #fanida-quiz-container .modal-trophy-sparkles {
+        position: relative;
+        display: inline-block;
+      }
+      #fanida-quiz-container .modal-trophy-sparkles::before,
+      #fanida-quiz-container .modal-trophy-sparkles::after {
+        content: '✨';
+        position: absolute;
+        font-size: 2.5rem;
+        opacity: 0;
+        animation: trophy-sparkle 2s ease-in-out infinite;
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fde047;
+      }
+      #fanida-quiz-container .modal-trophy-sparkles::before { top: 5%; left: 5%; animation-delay: 0s; }
+      #fanida-quiz-container .modal-trophy-sparkles::after { bottom: 10%; right: 5%; animation-delay: 1s; }
+      /* END OF NEW styles */
+
+      /* START of NEW styles for animated glass text */
+      @keyframes text-cloud-pan {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      #fanida-quiz-container .animated-glass-text {
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.6),
+          rgba(255, 255, 255, 1),
+          rgba(255, 255, 255, 0.6)
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 8px rgba(253, 224, 71, 0.5), 0 0 15px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0,0,0,0.5);
+        animation: text-cloud-pan 8s linear infinite;
+      }
+      /* END of NEW styles */
+
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    <script>
+      const setVh = () => {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      };
+      window.addEventListener('resize', setVh);
+      window.addEventListener('orientationchange', setVh);
+      setVh();
+    </script>
+  </body>
+</html>
