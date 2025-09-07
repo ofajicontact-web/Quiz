@@ -324,7 +324,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, requestFullScreen, o
     };
 
     const renderAuthForms = () => (
-        <div className="relative flex flex-col items-center justify-center h-full p-4 overflow-y-auto animate-zoom-in">
+        <div className="relative flex flex-col items-center justify-start md:justify-center h-full p-4 pt-12 md:pt-4 overflow-y-auto animate-zoom-in">
              <div className="w-full max-w-sm">
                 <div className="flex mb-4 border border-slate-600 rounded-lg p-1 bg-slate-900/80">
                     <button onClick={() => setStep('create')} className={`w-1/2 py-2 rounded-md font-semibold transition-colors ${step === 'create' ? 'bg-indigo-500 text-white' : 'text-slate-300'}`}>{t('create_profile')}</button>
