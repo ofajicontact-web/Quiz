@@ -873,8 +873,8 @@ export const GLOBAL_QUESTIONS: Question[] = [
         level: 2,
         question: { fr: "Quel pays a la population la plus nombreuse au monde ?", en: "Which country has the largest population in the world?", es: "¿Qué país tiene la población más grande del mundo?", dr: "أشنو هو البلد اللي عندو أكبر عدد ديال السكان فالعالم؟" },
         options: { fr: ["Inde", "Chine", "États-Unis", "Indonésie"], en: ["India", "China", "United States", "Indonesia"], es: ["India", "China", "Estados Unidos", "Indonesia"], dr: ["الهند", "الصين", "الولايات المتحدة", "إندونيسيا"] },
-        correctAnswer: { fr: "Chine", en: "China", es: "China", dr: "الصين" },
-        explanation: { fr: "Avec plus d’1,4 milliard d’habitants, c’est le pays le plus peuplé.", en: "With over 1.4 billion inhabitants, it is the most populous country.", es: "Con más de 1.400 millones de habitantes, es el país más poblado.", dr: "بأكثر من 1.4 مليار نسمة، هي الدولة الأكثر سكانا." }
+        correctAnswer: { fr: "Inde", en: "India", es: "India", dr: "الهند" },
+        explanation: { fr: "En 2025, l’Inde est le pays le plus peuplé du monde avec environ 1,46 milliard d’habitants, devant la Chine qui compte près de 1,41 milliard.", en: "In 2025, India is the most populous country in the world with around 1.46 billion people, ahead of China, which has nearly 1.41 billion.", es: "En 2025, India es el país más poblado del mundo con aproximadamente 1,46 mil millones de habitantes, por delante de China, que tiene casi 1,41 mil millones.", dr: "في 2025، الهند هي البلد اللي عندها أكثر عدد سكان في العالم بحوالي 1.46 مليار نسمة، قدام الصين اللي عندها تقريباً 1.41 مليار" }
     },
     {
         id: "gq_highest_mountain",
