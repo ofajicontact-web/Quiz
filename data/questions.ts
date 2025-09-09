@@ -760,8 +760,8 @@ export const GLOBAL_QUESTIONS: Question[] = [
         id: "gq_theory_of_relativity",
         level: 3,
         question: { fr: "Qui a développé la théorie de la relativité ?", en: "Who developed the theory of relativity?", es: "¿Quién desarrolló la teoría de la relatividad?", dr: "شكون طور نظرية النسبية؟" },
-        options: { fr: ["Isaac Newton", "Galileo Galilei", "Albert Einstein", "Stephen Hawking"], en: ["Isaac Newton", "Galileo Galilei", "Albert Einstein", "Stephen Hawking"], es: ["Isaac Newton", "Galileo Galilei", "Albert Einstein", "Stephen Hawking"], dr: ["إسحاق نيوتن", "جاليليو جاليلي", "ألبيرت أينشتاين", "ستيفن هوكينغ"] },
-        correctAnswer: { fr: "Albert Einstein", en: "Albert Einstein", es: "Albert Einstein", dr: "ألبيرت أينشتاein" },
+        options: { fr: ["Isaac Newton", "Galileo Galilei", "Albert Einstein", "Stephen Hawking"], en: ["Isaac Newton", "Galileo Galilei", "Albert Einstein", "Stephen Hawking"], es: ["Isaac Newton", "Galileo Galilei", "Albert Einstein", "Stephen Hawking"], dr: ["إسحاق نيوتن", "جاليليو جاليلي", "ألبيرت أينشتايين", "ستيفن هوكينغ"] },
+        correctAnswer: { fr: "Albert Einstein", en: "Albert Einstein", es: "Albert Einstein", dr: "ألبيرت أينشتايين" },
         explanation: { fr: "Albert Einstein, un physicien théoricien d'origine allemande, a développé la théorie de la relativité, l'un des deux piliers de la physique moderne.", en: "Albert Einstein, a German-born theoretical physicist, developed the theory of relativity, one of the two pillars of modern physics.", es: "Albert Einstein, un físico teórico de origen alemán, desarrolló la teoría de la relatividad, uno de los dos pilares de la física moderna.", dr: "ألبيرت أينشتاين، فيزيائي نظري من أصل ألماني، هو اللي طور نظرية النسبية، اللي هي وحدة من جوج ركائز ديال الفيزياء الحديثة." }
     },
     {
